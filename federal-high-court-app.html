@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a4c63">
+<title>ፌዴራል ከፍተኛ ፍርድ ቤት – የባለጉዳዮች መመሪያ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0f6f8f;--teal-d:#0a4c63;--teal-l:#e6f3f8;--gold:#f2b134;--bg:#eef3f6;--card:#fff;--text:#1c2b33;--muted:#6a7a84;--line:#dde8ee;--ok:#1e8a4a;--nav:64px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Noto Sans Ethiopic",system-ui,sans-serif;background:#cfdbe2;color:var(--text);line-height:1.6;font-size:15px}
+.app{position:relative;max-width:480px;height:100%;margin:0 auto;background:var(--bg);overflow:hidden;box-shadow:0 0 30px rgba(0,0,0,.18)}
+
+/* App bar */
+.bar{position:absolute;top:0;left:0;right:0;height:56px;background:var(--teal-d);color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.bar h1{flex:1;margin:0;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar button{border:0;background:rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;display:none}
+.bar button.show{display:block}
+
+/* Screens */
+.screen{position:absolute;top:56px;bottom:var(--nav);left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 28px;display:none}
+.screen.active{display:block}
+.detail{position:absolute;top:56px;bottom:0;left:0;right:0;background:var(--bg);overflow-y:auto;padding:16px 16px 40px;transform:translateX(100%);transition:transform .28s ease;z-index:15}
+.detail.open{transform:none}
+
+/* Bottom nav */
+nav{position:absolute;bottom:0;left:0;right:0;height:var(--nav);background:#fff;border-top:1px solid var(--line);display:flex;z-index:18}
+nav button{flex:1;border:0;background:none;font:inherit;font-size:12px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+nav button .i{font-size:22px;filter:grayscale(1);opacity:.7}
+nav button.on{color:var(--teal-d)}
+nav button.on .i{filter:none;opacity:1}
+nav button.on::before{content:"";position:absolute;top:0;width:36px;height:3px;border-radius:0 0 4px 4px;background:var(--gold)}
+nav button{position:relative}
+
+/* Home */
+.banner{background:linear-gradient(150deg,var(--teal-d),var(--teal));color:#fff;border-radius:20px;padding:18px;position:relative;overflow:hidden}
+.banner::after{content:"⚖️";position:absolute;right:-6px;bottom:-14px;font-size:90px;opacity:.15}
+.banner .court{font-size:12px;opacity:.85;margin-bottom:8px}
+.banner h2{margin:0 0 8px;font-size:19px;line-height:1.4}
+.banner p{margin:0;font-size:12.5px;opacity:.9;border-left:3px solid var(--gold);padding-left:10px}
+.h{display:flex;justify-content:space-between;align-items:baseline;margin:22px 2px 10px}
+.h b{font-size:16px;color:var(--teal-d)}
+.h a{font-size:13px;color:var(--teal);font-weight:600;cursor:pointer}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{background:var(--card);border-radius:16px;padding:12px 6px;text-align:center;border:0;font:inherit;cursor:pointer;box-shadow:0 1px 4px rgba(10,76,99,.08);display:flex;flex-direction:column;align-items:center;gap:6px}
+.tile:active{transform:scale(.96);background:var(--teal-l)}
+.tile .ic{width:46px;height:46px;border-radius:14px;background:var(--teal-l);display:grid;place-items:center;font-size:24px}
+.tile span.l{font-size:11.5px;font-weight:600;line-height:1.35;color:var(--text)}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 1px 4px rgba(10,76,99,.08)}
+.card p{margin:0;font-size:14px;color:#33444d}
+.tip{display:flex;gap:10px;background:#fff8e6;border:1px solid #f5dfa6;border-radius:14px;padding:12px;font-size:13px;margin-top:14px}
+
+/* Services list */
+.search{position:sticky;top:-16px;z-index:5;margin:-16px -16px 12px;padding:12px 16px;background:var(--bg)}
+.search input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--line);border-radius:14px;font:inherit;font-size:15px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%236a7a84' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='9' cy='9' r='6'/%3E%3Cpath d='M14 14l4 4'/%3E%3C/svg%3E") no-repeat 12px center}
+.search input:focus{outline:2px solid var(--teal);border-color:transparent}
+.grp{font-size:12px;font-weight:700;color:var(--muted);margin:16px 4px 8px;letter-spacing:.2px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px;margin-bottom:8px;width:100%;border:0;font:inherit;text-align:left;cursor:pointer;box-shadow:0 1px 3px rgba(10,76,99,.07)}
+.row:active{background:var(--teal-l)}
+.row .ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--teal-l);display:grid;place-items:center;font-size:22px}
+.row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:14px;line-height:1.4;color:var(--text)}
+.row .tx small{color:var(--muted);font-size:12px}
+.row .ch{color:var(--muted);font-size:20px}
+.none{text-align:center;color:var(--muted);padding:30px 0;display:none}
+
+/* Detail */
+.dh{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.dh .ic{flex:none;width:54px;height:54px;border-radius:16px;background:var(--teal);display:grid;place-items:center;font-size:28px}
+.dh h2{margin:0;font-size:17px;line-height:1.4;color:var(--teal-d)}
+.prog{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(10,76,99,.07)}
+.prog .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.pb{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--ok));border-radius:99px;transition:width .25s}
+.chk{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:14px;padding:13px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 3px rgba(10,76,99,.07);font-size:14.5px;line-height:1.55}
+.chk .box{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid #b8c9d2;display:grid;place-items:center;color:#fff;font-size:14px;font-weight:800;margin-top:1px;transition:.15s}
+.chk.done{background:#f0faf3}
+.chk.done .box{background:var(--ok);border-color:var(--ok)}
+.chk.done .tt{color:#587064}
+.done-msg{display:none;text-align:center;background:#e1f5e8;color:#17653a;border-radius:14px;padding:12px;font-weight:700;margin-top:6px}
+.reset{display:block;margin:14px auto 0;border:0;background:none;color:var(--teal);font:inherit;font-weight:600;font-size:13.5px;cursor:pointer}
+
+/* Contact */
+.call{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;text-decoration:none;color:var(--text);box-shadow:0 1px 4px rgba(10,76,99,.08)}
+.call .ic{flex:none;width:48px;height:48px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px}
+.call .ic.b{background:var(--teal)}
+.call .ic.f{background:#3b5998}
+.call b{display:block;font-size:16px}
+.call small{color:var(--muted);font-size:12px}
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="bar">
+    <button id="back" aria-label="ተመለስ">←</button>
+    <h1 id="title">የባለጉዳዮች መመሪያ</h1>
+    <button class="show" id="logo" tabindex="-1" style="pointer-events:none">⚖️</button>
+  </header>
+
+  <!-- HOME -->
+  <section class="screen active" id="s-home">
+    <div class="banner">
+      <div class="court">ፌዴራል ከፍተኛ ፍርድ ቤት · Federal High Court</div>
+      <h2>ወደ ፍርድ ቤት ሲመጡ ማሟላት ያለብዎት ቅድመ ሁኔታዎች</h2>
+      <p>ነፃ፣ ገለልተኛ እና ተጠያቂ የሆነ የዳኝነት ሥርዓት በማጠናከር የህዝብን እመኔታ ለማሳደግ እንተጋለን!</p>
+    </div>
+
+    <div class="h"><b>የሚፈልጉትን አገልግሎት ይምረጡ</b><a onclick="show('services')">ሁሉንም ይመልከቱ</a></div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="h"><b>መግቢያ</b></div>
+    <div class="card"><p>የፌደራል ከፍተኛ ፍርድ ቤት በአዲስ አበባ፣ ድሬዳዋ፣ ሀዋሳ እና አርባ ምንጭ ከተሞች ቋሚ ምድብ ችሎቶች፣ እንዲሁም ቋሚ ምድብ ችሎቶች ባልተደራጁባቸው የክልል ከተሞች ተዘዋዋሪ ችሎቶችን በማደራጀት በህግ በተሰጠው ስልጣን መሰረት የዳኝነት አገልግሎቱን ለህብረተሰቡ እየሰጠ ይገኛል። ተገልጋዮች ማሟላት ያለባቸውን ቅድመ ሁኔታዎች በግልፅ እንዲያውቁ፣ ጊዜና ገንዘባቸው ሳይባክን መብታቸውን ማስከበር እንዲችሉ እነዚህ ዝርዝሮች ተዘጋጅተው ቀርበዋል።</p></div>
+    <div class="tip"><span>💡</span><span>በእያንዳንዱ አገልግሎት ውስጥ ያሉትን መስፈርቶች ሲያሟሉ ✓ ምልክት ማድረግ ይችላሉ — ምን እንደቀረዎት በቀላሉ ያውቃሉ።</span></div>
+    <p class="foot">በኮሚዩኒኬሽንና ስትራቴጂያዊ አጋርነት ዳይሬክቶሬት የተዘጋጀ · ታህሳስ 2018 ዓ.ም</p>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="screen" id="s-services">
+    <div class="search"><input id="q" type="search" placeholder="ፈልግ፡ መታወቂያ፣ ውክልና፣ ይግባኝ…" aria-label="ፈልግ"></div>
+    <div id="list"></div>
+    <p class="none" id="none">ምንም ውጤት አልተገኘም።</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="screen" id="s-contact">
+    <div class="h" style="margin-top:0"><b>ያግኙን</b></div>
+    <a class="call" href="tel:+251112765276"><span class="ic">📞</span><span><b>0112 76 52 76</b><small>ለመደወል ይንኩ</small></span></a>
+    <a class="call" href="tel:+251112755399"><span class="ic">☎️</span><span><b>+251-112 755 399</b><small>ለመደወል ይንኩ</small></span></a>
+    <a class="call" href="tel:3483"><span class="ic b">📣</span><span><b>3483</b><small>አጭር ቁጥር</small></span></a>
+    <div class="call"><span class="ic f">f</span><span><b>ኢትዮጵያ ፌደራል ከፍተኛ ፍርድ ቤት</b><small>The Federal High Court of Ethiopia · Facebook</small></span></div>
+    <p class="foot">ፌዴራል ከፍተኛ ፍርድ ቤት</p>
+  </section>
+
+  <!-- DETAIL -->
+  <section class="detail" id="detail">
+    <div class="dh"><span class="ic" id="d-ic"></span><h2 id="d-t"></h2></div>
+    <div class="prog"><div class="top"><span>ያሟሉት</span><span id="d-n">0/0</span></div><div class="pb"><i id="d-b"></i></div></div>
+    <div id="d-items"></div>
+    <div class="done-msg" id="d-done">🎉 ሁሉንም መስፈርቶች አሟልተዋል!</div>
+    <button class="reset" id="d-reset">↺ ምልክቶችን አጽዳ</button>
+  </section>
+
+  <nav>
+    <button class="on" data-s="home"><span class="i">🏠</span>መነሻ</button>
+    <button data-s="services"><span class="i">📋</span>አገልግሎቶች</button>
+    <button data-s="contact"><span class="i">📞</span>አግኙን</button>
+  </nav>
+</div>
+
+<script>
+var DATA=[
+{id:'a',l:'ሀ',g:1,ic:'⚖️',s:'የወንጀል ቀጥታ ክስ',t:'በወንጀል ጉዳይ የሚቀርቡ የቀጥታ ክስ ፋይሎች ማሟላት የሚገባቸው ቅድመ ሁኔታዎች',i:[
+'የክሱ ማመልከቻ በወንጀለኛ መቅጫ ሥነ-ሥርዓት ህግ አንቀጽ 111 መሰረት ተሟልቶ መቅረብ ይኖርበታል',
+'ቀን እና ዓመተ ምህረት የተጻፈበት ሆኖ ተፈርሞ ማቅረብ',
+'የተከሳሽ ስም፣ የተከሰሰበት ወንጀል፣ የተላለፈውን የህግ አንቀጽ እና መሰረታዊ ነገሮች አሟልቶ ማቅረብ',
+'ወንጀሉ የተፈጸመበትን ጊዜ እና ስፍራ ባሟላ መልኩ ማቅረብ',
+'የሚመራው ፋይል አርቲዲ፣ መደበኛ መሆኑን በመግለጽ ማቅረብ',
+'ተከሳሹ/ተከሳሾች የታሰሩበት ጊዜ ካለ ይሀም ተገልጾ ማቅረብ',
+'የሚቀርበው ክስ የክስ አቤቱታ በሶፍት ኮፒ ጭምር ማቅረብ',
+'የሚቀርበው ክስ ለፍርድ ቤቱ በ2 ኮፒ እና በተከሳሾች ልክ መቅረብ ይኖርበታል',
+'የዐ/ህግ ጽ/ቤት ማህተም ተደርጎበት መቅረብ',
+'በማስረጃ ዝርዝር ውስጥ የተጠቀሱ ማስረጃዎች በሚታይ ኮፒ ማቅረብ ይጠበቅባቸዋል']},
+{id:'b',l:'ለ',g:1,ic:'📨',s:'ይግባኝ',t:'ይግባኝ ሲሆን ማሟላት የሚገባቸው ቅድመ ሁኔታዎች',i:[
+'ይግባኝ መጠየቂያ ማመልከቻው በተከሳሽ ወይም በጠበቃው ብቻ ተፈርሞ መቅረብ አለበት',
+'ይግባኝ መጠየቂያውን በሬጅስትራር አስመርቶ ማቅረብ',
+'ማንነትን የሚገልጽ መታወቂያ ሲጠየቅ ማቅረብ',
+'ተወካይ ከሆነ ህጋዊ ውክልና እና መታወቂያ ማቅረብ',
+'የስር ፍርድ ቤት ግልባጩ በሚነበብ እጅ ጽሁፍ / በኮምፒውተር ተገልብጦ ማቅረብ',
+'ስር ፍርድ ቤት ይግባኝ የተጠየቀበት ይግባኝ መጠየቂያ ኮፒ ማህተም ተደርጎበት ማቅረብ፤ ይግባኝ ቅሬታውን በሶፍት ኮፒ ጭምር ማቅረብ ይኖርበታል']},
+{id:'c',l:'ሐ',g:1,ic:'📝',s:'ማንኛውም አቤቱታ',t:'ማንኛውም አቤቱታ ሲቀርብ ማሟላት የሚገባቸው ቅድመ ሁኔታዎች',i:[
+'ሬጅስትራር ጽ/ቤት በተዘጋጀው የአቤቱታ ማቅረቢያ ፎርም መሰረት ማቅረብ',
+'በሚነበብ እጅ ጽሁፍ ጽፎ ማቅረብ',
+'የሚፈለገውን ጉዳይ በግልጽ ማቅረብ',
+'በአቤቱታው አቤት ባይ /ወኪል/ጠበቃ ተፈርሞ ማቅረብ ይኖርባቸዋል']},
+{id:'d',l:'መ',g:2,ic:'ℹ️',s:'መረጃ ዴስክ',t:'ባለጉዳዮች ወደ መረጃ ዴስክ ሲመጡ ማሟላት ያለባቸው',i:[
+'የተከራካሪዎችን መጠሪያ (ስም) ማቅረብ፤ መዝገብ ቁጥሩን ማቅረብ ይጠበቅባቸዋል',
+'ማንነትን የሚገልጽ መታወቂያ ይዞ መቅረብ፤ በውክልና ከሆነ ውክልናው እና ማንነትን የሚገልጽ መታወቂያ ይዞ መቅረብ ይጠበቅባቸዋል']},
+{id:'e',l:'ሰ',g:2,ic:'📂',s:'ፋይል ከፋት',t:'ባለጉዳዮች ወደ ፋይል ከፋት ሲመጡ ማሟላት ያለባቸው',i:[
+'የሚከፈተው ፋይል በሬጅስትራር አስመርቶ ማቅረብ',
+'ዳኝነት የሚከፈል ከሆነ ይሆንኑ የክፍያ መረጃም ይጠበቅባቸዋል']},
+{id:'f',l:'ረ',g:2,ic:'🧑‍⚖️',s:'ችሎት ፀሃፊ',t:'ባለጉዳዮች ወደ ችሎት ፀሃፊ ሲመጡ ማሟላት ያለባቸው',i:[
+'ይግባኝ መጠየቂያውን በሬጅስትራር አስመርቶ ማቅረብ',
+'ማንነትን የሚገልጽ መታወቂያ ሲጠየቅ ማቅረብ',
+'ተወካይ ከሆነ ህጋዊ ውክልና እና መታወቂያ ማቅረብ',
+'የቀረበውን መጠየቂያ በሬጅስትራር ወይም በዳኛ አስመርቶ ማቅረብ',
+'መጠየቅ ስለሚፈለገው መዝገብ የመዝገብ ቁጥርና ስም ማቅረብ',
+'የሚፈለገውን ትእዛዝ ወይም ውሳኔ ችሎት ጽሀፊ ወይም መዝገብ ቤት ኃላፊ ከመዝገቡ ስለመውጣቱ አረጋግጦ ይዞ መቅረብ',
+'የይፈረጋገጥልኝ ጥያቄውን ይዞ የመጣው ግለሰብ ማንነቱን የሚገልጽ መታወቂያ ይዞ መቅረብ ይኖርባቸዋል']},
+{id:'g',l:'ሠ',g:2,ic:'📄',s:'የትዕዛዝ/ውሳኔ ግልባጭ',t:'የትዕዛዝ፣ ውሳኔ፣ ቅጣት፣ ብይን ግልባጭ ለመስጠት ማሟላት ያለባቸው',i:[
+'የቀረበውን መጠየቂያ በሬጅስትራር ወይም በዳኛ አስመርቶ ማቅረብ',
+'ከባንክ፣ ከኢሚግሬሽን እና ከተለያዩ ተቋማት የሚወጡ ትዕዛዞች የሚፈለጉ ከሆነ የይፈረጋገጥልኝ ጥያቄዎችን ማቅረብ',
+'የሚፈለገውን ትእዛዝ ወይም ውሳኔ ችሎት ጽሀፊ ወይም መዝገብ ቤት ኃላፊ ከመዝገቡ ስለመውጣቱ አረጋግጦ ይዞ መቅረብ',
+'የይፈረጋገጥልኝ ጥያቄውን ይዞ የመጣው ግለሰብ ማንነቱን የሚገልጽ መታወቂያ ይዞ መቅረብ ይኖርበታል']},
+{id:'h',l:'ሸ',g:2,ic:'💰',s:'ገንዘብ ሰብሳቢ',t:'ወደ ገንዘብ ሰብሳቢ ሲሄዱ ማሟላት ያለባቸው',i:[
+'የዋስትና፣ ቅጣት እና የፍርድ ቤት ወጪ ክፍያውን በተሰጠው የባንክ ቁጥር በማስገባት ደረሰኝ ይዞ መቅረብ',
+'ክፍያ እንዲከፈል የተጠየቀ (ገንዘብ ቤት እንዲያስከፍል የተጻፈለትን) ውሳኔ / ወረቀት ይዞ መቅረብ ይኖርባቸዋል']},
+{id:'i',l:'ቀ',g:2,ic:'🔏',s:'ማህተም ያሻ',t:'ወደ ማህተም ያሻ ሲሄዱ ማሟላት ያለባቸው',i:[
+'ማህተም እንዲመታበት የሚቀርበውን ዶክመንት / ውሳኔ፣ ትእዛዝ በዳኛ ወይም በሬጅስትራር አስፈርሞ ማቅረብ']},
+{id:'j',l:'በ',g:2,ic:'🗄️',s:'መዝገብ ቤት',t:'ወደ መዝገብ ቤት ሲሄዱ ማሟላት ያለባቸው',i:[
+'የሚፈልጉትን ትእዛዝ ወይም ውሳኔ ይዞ መቅረብ',
+'የይፈረጋገጥልኝ ጥያቄውን ይዞ የመጣው ግለሰብ ማንነቱን የሚገልጽ መታወቂያ ይዞ መቅረብ',
+'አቤቱታውን ሬጅስትራር በማስመራት ማቅረብ',
+'ማንነትን የሚገልጽ መታወቂያ ይዞ መቅረብ',
+'ተወካይ ከሆነ ህጋዊ ውክልና እና መታወቂያ ማቅረብ ይኖርባቸዋል']},
+{id:'k',l:'ተ',g:2,ic:'↩️',s:'የዋስትና ገንዘብ ተመላሽ',t:'ባለጉዳዮች በዋስትና የተያዘ ገንዘብ ተመላሽ ሲጠይቁ ማሟላት ያለባቸው',i:[
+'ባለጉዳዩ ራሱ ከሆነ ማንነቱን የሚገልጽ መታወቂያ ሲጠየቅ ማቅረብ',
+'ተወካይ ከሆነ ህጋዊ ውክልና እና መታወቂያ ማቅረብ']},
+{id:'l',l:'ቸ',g:2,ic:'🏛️',s:'አቤቱታ ማቅረብ (አቃቤ ሕግ/ፖሊስ)',t:'አቤቱታ (የክስ አቤቱታ) ሲያቀርቡ ማሟላት ያለባቸው',i:[
+'አቤቱታውን በሬጅስትራር አስመርቶ ማቅረብ',
+'የክስ አቤቱታውን የሚያቀርቡት አቃቤ ሕግ እና የአቃቤ ሕግ ጽ/ቤት ሠራተኛ ወይም ፖሊስ መሆን ይኖርባቸዋል',
+'ተከሳሽ አንድ ከሆነ/ች የክስ አቤቱታ ለተከሳሽ አንድ ኮፒና ለፍርድ ቤት በሁለት ኮፒ መቅረብ ያለበት ሲሆን፣ የተከሳሾች ብዛት በጨመረ ቁጥር የክስ አቤቱታው በተከሳሾች ቁጥር ተጨምሮ መቅረብ ይኖርበታል',
+'የክስ አቤቱታው በሚቀርብ ጊዜ አቃቤ ሕግ ከፈረመበት በኋላ የአቃቤ ሕግ ጽ/ቤት ማህተም በእያንዳንዱ ገጽ ላይ መደረግ አለበት',
+'በአቃቤ ሕግ ክስ ላይ የተዘረዘሩ ማስረጃዎች ዋናውን ከኮፒው ጋር ለማመሳከሪያነት መቅረብ አለበት',
+'ተዘጋጅቶ በሚቀርበው የክስ አቤቱታ ላይ የተከሳሽ/ሾች ስም ከነአያት፣ ዕድሜና አድራሻ በመጻፍ ተከሳሾች የታሰሩበትን ጊዜ በመግለጽ በክስ አቤቱታው ላይ መግለጽ አለበት',
+'ከላይ በተቀመጠው መልኩ የሚቀርበው የክስ ማመልከቻ ተቀባይነትን አግኝቶ የክስ ፋይሉ በተከፈተ ጊዜ ፋይሉ በፍጥነት ችሎት የሚታይ ከሆነ የአቃቤ ሕግ የሰው ምስክሮች ተሟልተው ከክሱ ፋይል ጋር በዕለቱ መቅረብ አለባቸው']}
+];
+
+var $=function(i){return document.getElementById(i)};
+var titles={home:'የባለጉዳዮች መመሪያ',services:'አገልግሎቶች',contact:'አግኙን'};
+var checks={}, cur=null, curScreen='home';
+try{checks=JSON.parse(localStorage.getItem('fhc_checks')||'{}')}catch(e){}
+function save(){try{localStorage.setItem('fhc_checks',JSON.stringify(checks))}catch(e){}}
+
+// Home tiles
+$('tiles').innerHTML=DATA.slice(0,9).map(function(d){
+  return '<button class="tile" onclick="openD(\''+d.id+'\')"><span class="ic">'+d.ic+'</span><span class="l">'+d.s+'</span></button>';
+}).join('');
+
+// Services list
+function renderList(v){
+  var out='',n=0,g1='<div class="grp">በሬጅስትራር ጽ/ቤት የሚሰጡ አገልግሎቶች</div>',g2='<div class="grp">ሌሎች አገልግሎቶች</div>',a='',b='';
+  DATA.forEach(function(d){
+    if(v&&(d.t+d.s+d.i.join(' ')).indexOf(v)<0) return;
+    n++;
+    var done=(checks[d.id]||[]).filter(Boolean).length;
+    var row='<button class="row" onclick="openD(\''+d.id+'\')"><span class="ic">'+d.ic+'</span><span class="tx"><b>'+d.l+'. '+d.s+'</b><small>'+(done?done+'/'+d.i.length+' ተሟልቷል':d.i.length+' መስፈርቶች')+'</small></span><span class="ch">›</span></button>';
+    if(d.g==1)a+=row;else b+=row;
+  });
+  $('list').innerHTML=(a?g1+a:'')+(b?g2+b:'');
+  $('none').style.display=n?'none':'block';
+}
+$('q').addEventListener('input',function(){renderList(this.value.trim())});
+renderList('');
+
+// Navigation
+function show(s){
+  closeD(true);
+  curScreen=s;
+  ['home','services','contact'].forEach(function(x){$('s-'+x).classList.toggle('active',x===s)});
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.s===s)});
+  $('title').textContent=titles[s];
+  $('back').classList.remove('show');$('logo').classList.add('show');
+  $('s-'+s).scrollTop=0;
+  if(s==='services')renderList($('q').value.trim());
+}
+document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.s)})});
+
+function openD(id){
+  cur=DATA.filter(function(d){return d.id===id})[0];
+  $('d-ic').textContent=cur.ic;
+  $('d-t').textContent=cur.l+'. '+cur.t;
+  if(!checks[id])checks[id]=[];
+  $('d-items').innerHTML=cur.i.map(function(t,k){
+    return '<div class="chk'+(checks[id][k]?' done':'')+'" data-k="'+k+'"><span class="box">'+(checks[id][k]?'✓':'')+'</span><span class="tt">'+t+'</span></div>';
+  }).join('');
+  upd();
+  $('title').textContent=cur.s;
+  $('back').classList.add('show');$('logo').classList.remove('show');
+  $('detail').scrollTop=0;
+  $('detail').classList.add('open');
+  try{history.pushState({d:1},'')}catch(e){}
+}
+function closeD(silent){
+  if(!$('detail').classList.contains('open'))return;
+  $('detail').classList.remove('open');
+  $('title').textContent=titles[curScreen];
+  $('back').classList.remove('show');$('logo').classList.add('show');
+  renderList($('q').value.trim());
+}
+function upd(){
+  var c=checks[cur.id],n=c.filter(Boolean).length,t=cur.i.length;
+  $('d-n').textContent=n+'/'+t;
+  $('d-b').style.width=(n/t*100)+'%';
+  $('d-done').style.display=(n===t)?'block':'none';
+}
+$('d-items').addEventListener('click',function(e){
+  var el=e.target.closest('.chk');if(!el)return;
+  var k=+el.dataset.k;checks[cur.id][k]=!checks[cur.id][k];
+  el.classList.toggle('done',checks[cur.id][k]);
+  el.querySelector('.box').textContent=checks[cur.id][k]?'✓':'';
+  save();upd();
+});
+$('d-reset').addEventListener('click',function(){checks[cur.id]=[];save();document.querySelectorAll('#d-items .chk').forEach(function(el){el.classList.remove('done');el.querySelector('.box').textContent=''});upd();});
+$('back').addEventListener('click',function(){closeD();try{if(history.state&&history.state.d)history.back()}catch(e){}});
+window.addEventListener('popstate',function(){closeD()});
+</script>
+</body>
+</html>
