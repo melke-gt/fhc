@@ -141,17 +141,18 @@ svg{display:block}
 .search input::placeholder{color:#a9b0e0}
 .search input:focus{outline:2px solid var(--glow);border-color:transparent}
 .search svg{position:absolute;left:16px;top:50%;margin-top:-10px;width:20px;height:20px;color:#a9b0e0}
-.svc{overflow-y:auto}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 6px;padding:18px 14px 8px}
-.tile{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border-radius:18px;padding:2px}
-.tile .orb{width:62px;height:62px;color:#e8ecff;background:radial-gradient(circle at 30% 22%,#4b519f 0%,#2e3282 58%,#23265f 100%);
-  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),0 10px 20px rgba(8,10,40,.5);border:1px solid rgba(255,255,255,.06);transition:.2s}
-.tile .orb svg{width:26px;height:26px}
-.tile:active .orb,.tile:focus-visible .orb{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.3),0 0 0 2px rgba(150,210,255,.8),0 0 26px rgba(108,196,255,.8)}
-.tile.has .orb{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.3),0 0 0 2px rgba(150,210,255,.55),0 0 20px rgba(108,196,255,.55)}
-.tile span.l{font-size:11.5px;font-weight:600;line-height:1.3;color:#dfe3ff;min-height:2.6em}
-.none{display:none;text-align:center;color:var(--muted);padding:24px 0}
-.svc .sheet{flex:1 0 auto;margin-top:12px;overflow:visible}
+.emo{flex:none;width:50px;height:50px;border-radius:16px;background:#e6f3f8;display:grid;place-items:center;font-size:26px;line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;box-shadow:inset 0 0 0 1px rgba(15,111,143,.06)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:2px 0 18px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;text-align:center;padding:16px 6px 14px;min-height:132px;border-radius:24px;background:#fff;
+  box-shadow:0 6px 18px rgba(60,66,140,.16);border:1px solid rgba(255,255,255,.9);transition:transform .15s,box-shadow .15s}
+.tile:active,.tile:focus-visible{transform:scale(.97);box-shadow:0 0 0 2px rgba(108,196,255,.7),0 8px 22px rgba(60,66,140,.22)}
+.tile .emo{width:58px;height:58px;border-radius:19px;font-size:29px}
+.tile span.l{font-size:13px;font-weight:700;line-height:1.4;color:#1c2b33}
+.tile .badge{position:absolute;top:8px;right:8px;font-size:10.5px;font-weight:800;line-height:1;padding:4px 7px;border-radius:10px;color:#fff;background:linear-gradient(135deg,#7b84dd,#5a5fc0)}
+.tile.full .badge{background:linear-gradient(135deg,#4fd1c5,#3a8fe0)}
+.none{display:none;text-align:center;color:#5d6398;padding:24px 0}
+.svc{overflow:hidden}
+.svc .sheet{flex:1 1 auto;margin-top:14px;overflow-y:auto}
 .hint{display:flex;gap:12px;align-items:center;padding:14px;border-radius:20px;background:rgba(255,255,255,.5);font-size:13.5px;color:#3b4180}
 .hint .orb{flex:none;width:44px;height:44px}
 
@@ -189,8 +190,8 @@ svg{display:block}
 .ring{--p:0;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--glow) calc(var(--p)*1%),rgba(255,255,255,.16) 0);box-shadow:0 0 18px rgba(108,196,255,.45)}
 .ring span{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#262a62;font-size:12px;font-weight:800}
 .dhero{position:relative;z-index:3;display:flex;gap:16px;align-items:center;padding:14px 22px 20px}
-.dhero .orb{flex:none;width:72px;height:72px}
-.dhero .orb svg{width:32px;height:32px}
+.dhero .emo{width:76px;height:76px;border-radius:24px;font-size:40px}
+.emo.glow{box-shadow:0 0 0 2px rgba(150,210,255,.85),0 0 30px rgba(108,196,255,.85)}
 .dhero h3{margin:0;font-size:17px;line-height:1.4;font-weight:800;text-shadow:0 0 20px rgba(108,196,255,.4)}
 .dhero small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 .pbar{height:8px;border-radius:8px;background:rgba(255,255,255,.14);margin:0 22px 22px;position:relative;z-index:3;overflow:hidden}
@@ -256,10 +257,10 @@ svg{display:block}
   <section class="screen svc" id="s-services">
     <div class="pagehead"><h2>አገልግሎቶች</h2><p>የሚፈልጉትን ይምረጡ</p></div>
     <label class="search"><i data-ic="search"></i><input id="q" type="search" placeholder="ፈልግ፦ መታወቂያ፣ ውክልና፣ ይግባኝ…" aria-label="ፈልግ"></label>
-    <div class="grid" id="grid"></div>
-    <p class="none" id="none">ምንም ውጤት አልተገኘም።</p>
     <div class="sheet">
       <div class="grab"></div>
+      <div class="grid" id="grid"></div>
+      <p class="none" id="none">ምንም ውጤት አልተገኘም።</p>
       <h3>የጀመሯቸው</h3>
       <div id="recent"></div>
     </div>
@@ -288,7 +289,7 @@ svg{display:block}
       <h2 id="dTitle"></h2>
       <div class="ring" id="ring" aria-hidden="true"><span id="ringN">0/0</span></div>
     </div>
-    <div class="dhero"><span class="orb glow" id="dOrb"></span><div><h3 id="dFull"></h3><small id="dCount"></small></div></div>
+    <div class="dhero"><span class="emo glow" id="dOrb"></span><div><h3 id="dFull"></h3><small id="dCount"></small></div></div>
     <div class="pbar"><i id="dBar"></i></div>
     <div class="sheet" id="dSheet">
       <div class="grab"></div>
@@ -371,7 +372,7 @@ var META={
  e:{ic:'folder',s:'ፋይል ከፋት'}, f:{ic:'pen',s:'ችሎት ፀሃፊ'}, g:{ic:'copy',s:'ግልባጭ'}, h:{ic:'wallet',s:'ገንዘብ ሰብሳቢ'},
  i:{ic:'stamp',s:'ማህተም ያሻ'}, j:{ic:'archive',s:'መዝገብ ቤት'}, k:{ic:'undo',s:'ዋስትና ተመላሽ'}, l:{ic:'landmark',s:'የአቃቤ ሕግ አቤቱታ'}
 };
-DATA.forEach(function(d){d.ic=META[d.id].ic;d.s=META[d.id].s;});
+DATA.forEach(function(d){d.em=d.ic;d.ic=META[d.id].ic;});
 
 var ICONS={
  scale:'<path d="M12 3v18"/><path d="M5 21h14"/><path d="M3 7h18"/><path d="M6 7l-3 7a3 3 0 0 0 6 0z"/><path d="M18 7l-3 7a3 3 0 0 0 6 0z"/>',
@@ -414,7 +415,7 @@ function tick(){var d=new Date();$('clock').textContent=d.getHours()+':'+('0'+d.
 /* home rows */
 function rowHTML(d,withBar){
   var n=doneOf(d),t=d.i.length;
-  return '<button class="row" data-id="'+d.id+'"><span class="orb">'+svg(d.ic)+'</span><span class="tx"><b>'+d.s+'</b><small>'+(n?n+'/'+t+' ተሟልቷል':t+' መስፈርቶች')+'</small>'+(withBar?'<div class="mini"><i style="width:'+(n/t*100)+'%"></i></div>':'')+'</span><span class="chev">'+svg('chev')+'</span></button>';
+  return '<button class="row" data-id="'+d.id+'"><span class="emo">'+d.em+'</span><span class="tx"><b>'+d.s+'</b><small>'+(n?n+'/'+t+' ተሟልቷል':t+' መስፈርቶች')+'</small>'+(withBar?'<div class="mini"><i style="width:'+(n/t*100)+'%"></i></div>':'')+'</span><span class="chev">'+svg('chev')+'</span></button>';
 }
 function renderHome(){$('homeRows').innerHTML=DATA.slice(0,3).map(function(d){return rowHTML(d,false)}).join('');}
 
@@ -423,7 +424,8 @@ function renderGrid(v){
   var n=0;
   $('grid').innerHTML=DATA.map(function(d){
     var hit=!v||(d.t+d.s+d.i.join(' ')).indexOf(v)>-1; if(!hit)return ''; n++;
-    return '<button class="tile'+(doneOf(d)?' has':'')+'" data-id="'+d.id+'"><span class="orb">'+svg(d.ic)+'</span><span class="l">'+d.s+'</span></button>';
+    var dn=doneOf(d),tt=d.i.length;
+    return '<button class="tile'+(dn===tt?' full':'')+'" data-id="'+d.id+'"><span class="emo">'+d.em+'</span><span class="l">'+d.s+'</span>'+(dn?'<span class="badge">'+(dn===tt?'✓':dn+'/'+tt)+'</span>':'')+'</button>';
   }).join('');
   $('none').style.display=n?'none':'block';
 }
@@ -453,7 +455,7 @@ function openD(id){
   cur=DATA.filter(function(d){return d.id===id})[0];if(!cur)return;
   if(!checks[id])checks[id]=[];
   $('dTitle').textContent=cur.s;
-  $('dOrb').innerHTML=svg(cur.ic);
+  $('dOrb').textContent=cur.em;
   $('dFull').textContent=cur.l+'. '+cur.t;
   $('dItems').innerHTML=cur.i.map(function(t,k){
     var on=checks[id][k];
