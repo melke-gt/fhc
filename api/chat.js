@@ -2,8 +2,12 @@
 // The Gemini API key is read from the GEMINI_API_KEY environment variable (never put it in index.html).
 const KNOWLEDGE = require("./_knowledge");
 
-const PRIMARY_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
+// Two key types are supported:
+//  - Google AI Studio keys (start with "AIza")  -> generativelanguage.googleapis.com
+//  - Vertex AI express-mode keys (start with "AQ.") -> aiplatform.googleapis.com
+const isVertexKey = (k) => /^AQ\./.test(k || "");
 const FALLBACK_MODEL = "gemini-2.5-flash";
+const primaryModel = (k) => process.env.GEMINI_MODEL || (isVertexKey(k) ? FALLBACK_MODEL : "gemini-flash-latest");
 
 const SYSTEM = `You are the information assistant inside the "ባለጉዳዮች መመሪያ" (Litigants' Guide) website of the Federal High Court of Ethiopia.
 
@@ -31,10 +35,14 @@ function limited(ip) {
 }
 
 async function callGemini(model, contents, key) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const vertex = isVertexKey(key);
+  const url = vertex
+    ? `https://aiplatform.googleapis.com/v1/publishers/google/models/${model}:generateContent?key=${encodeURIComponent(key)}`
+    : `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const headers = vertex ? { "Content-Type": "application/json" } : { "Content-Type": "application/json", "x-goog-api-key": key };
   const r = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+    headers,
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM }] },
       contents,
@@ -47,9 +55,11 @@ async function callGemini(model, contents, key) {
 
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
+  const key = (process.env.GEMINI_API_KEY || "").trim();
+  // Open /api/chat in a browser to check the setup (never reveals the key).
+  if (req.method === "GET") return res.status(200).json({ ok: true, configured: !!key, provider: key ? (isVertexKey(key) ? "vertex-express" : "gemini-api") : null });
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
 
-  const key = process.env.GEMINI_API_KEY;
   if (!key) return res.status(503).json({ error: "not_configured" });
 
   const ip = String(req.headers["x-forwarded-for"] || "unknown").split(",")[0].trim();
@@ -70,6 +80,7 @@ module.exports = async (req, res) => {
   }
 
   try {
+    const PRIMARY_MODEL = primaryModel(key);
     let out = await callGemini(PRIMARY_MODEL, contents, key);
     if (!out.ok && (out.status === 404 || out.status === 400) && PRIMARY_MODEL !== FALLBACK_MODEL) {
       out = await callGemini(FALLBACK_MODEL, contents, key);
